@@ -29,6 +29,7 @@
 
     <version>1.0-SNAPSHOT</version>
     <name>sshjgit :: Simple Webapp</name>
+    <description>Simple webapp for trying out sshjgit in a webapp environment. Most of it is copied from / based on Apache Shiro "samples-spring".</description>
 
     <parent>
         <groupId>com.sonatype.sshjgit</groupId>
