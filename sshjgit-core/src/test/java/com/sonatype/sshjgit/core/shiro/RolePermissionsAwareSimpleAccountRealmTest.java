@@ -76,6 +76,10 @@ public class RolePermissionsAwareSimpleAccountRealmTest {
         Assert.assertArrayEquals(objectPermissions.toArray(), info.getObjectPermissions().toArray());
     }
 
+    // TODO: given group and no other permissions then group's permissions
+    // TODO: given groups and no other permissions then groups' permissions
+    // TODO: given groups and string and object permissions then all combined
+
     protected Collection<String> createStringPermissions(String username) {
         final HashSet<String> strings = new HashSet<String>();
         strings.add("gitrepo:push:project");
