@@ -63,6 +63,19 @@ public class RolePermissionsAwareSimpleAccountRealmTest {
         Assert.assertArrayEquals(objectPermissions.toArray(), info.getObjectPermissions().toArray());
     }
 
+    @Test
+    public void givenNoGroupAndBothStringAndObjectPermissionsThenSamePermissions(){
+        final SimpleAccount account = new SimpleAccount(USERNAME, PASSWORD, REALM_NAME);
+        final Collection<String> stringPermissions = createStringPermissions(USERNAME);
+        account.addStringPermissions(stringPermissions);
+        final Collection<Permission> objectPermissions = createObjectPermissions();
+        account.addObjectPermissions(objectPermissions);
+        realm.add(account);
+        final AuthorizationInfo info = realm.doGetAuthorizationInfo(PRINCIPALS);
+        Assert.assertArrayEquals(stringPermissions.toArray(), info.getStringPermissions().toArray());
+        Assert.assertArrayEquals(objectPermissions.toArray(), info.getObjectPermissions().toArray());
+    }
+
     protected Collection<String> createStringPermissions(String username) {
         final HashSet<String> strings = new HashSet<String>();
         strings.add("gitrepo:push:project");
