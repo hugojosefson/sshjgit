@@ -3,6 +3,8 @@ package com.sonatype.sshjgit.core.shiro;
 import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.permission.AllPermission;
+import org.apache.shiro.authz.permission.DomainPermission;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,6 +40,7 @@ public class RolePermissionsAwareSimpleAccountRealmTest {
         Assert.assertTrue(info.getObjectPermissions().isEmpty());
         Assert.assertNull(info.getStringPermissions());
     }
+    
     @Test
     public void givenNoGroupAndStringPermissionsThenSameStringPermissions(){
         final SimpleAccount account = new SimpleAccount(USERNAME, PASSWORD, REALM_NAME);
@@ -49,6 +52,17 @@ public class RolePermissionsAwareSimpleAccountRealmTest {
         Assert.assertArrayEquals(stringPermissions.toArray(), info.getStringPermissions().toArray());
     }
 
+    @Test
+    public void givenNoGroupAndObjectPermissionsThenSameObjectPermissions(){
+        final SimpleAccount account = new SimpleAccount(USERNAME, PASSWORD, REALM_NAME);
+        final Collection<Permission> objectPermissions = createObjectPermissions();
+        account.addObjectPermissions(objectPermissions);
+        realm.add(account);
+        final AuthorizationInfo info = realm.doGetAuthorizationInfo(PRINCIPALS);
+        Assert.assertNull(info.getStringPermissions());
+        Assert.assertArrayEquals(objectPermissions.toArray(), info.getObjectPermissions().toArray());
+    }
+
     protected Collection<String> createStringPermissions(String username) {
         final HashSet<String> strings = new HashSet<String>();
         strings.add("gitrepo:push:project");
@@ -58,4 +72,13 @@ public class RolePermissionsAwareSimpleAccountRealmTest {
 
     }
 
+    protected Collection<Permission> createObjectPermissions() {
+        final HashSet<Permission> permissions = new HashSet<Permission>();
+        permissions.add(new AllPermission());
+        permissions.add(new MyDomainPermission());
+        return permissions;
+    }
+
+    private class MyDomainPermission extends DomainPermission {
+    }
 }
